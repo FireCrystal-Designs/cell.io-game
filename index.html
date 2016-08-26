@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Raleway">
+        <style>
+            html, body {
+                background: black; 
+                height: 100%;
+                margin: 0;
+            }
+            #death_screen_container {
+                text-align: center;
+                width: 100%;
+                height: 100%;
+                position: relative;
+                background-color: black;
+            }
+            #dead {
+                font-family: Raleway;
+                font-size: 30px;
+                color: white;
+            }
+            
+            #start_screen_container {
+                position: relative;
+                background: #34495e;
+                min-height: 100%;
+                height: 100%;
+                text-align: center;
+                vertical-align: middle;
+            }
+            
+            #start_screen_login {
+                position: absolute;
+                border-radius: 10px;
+                top: 50%; left: 50%;
+                transform: translate(-50%,-50%);
+                background: white;
+                width: 35%;
+                height: 500px;
+                margin: auto;
+            }
+            #play_container {
+                padding-top: 50px;
+            }
+            
+            #changelog_container {
+                left:0;
+                top: 0;
+                text-align: left;
+                background-color: aliceblue;
+                border-radius: 5%;
+                width: 25%;
+            }
+            
+            #titleChange {
+                list-style-type: none;
+                font-family: Raleway;
+                font-size: 20px;
+            }
+            
+            #change1 {
+                font-family: Raleway;
+            }
+            #change2 {
+                font-family: Raleway;
+            }
+            #change3 {
+                font-family: Raleway;
+            }
+            #spaceTaker {
+                list-style-type: none;
+            }
+            
+        </style>
+    </head>
+    
+    <body>
+        <div id="death_screen_container">
+            <h1 id="dead">You died!</h1>
+        </div>
+        <div id="start_screen_container">
+            <div id="changelog_container">
+                    <ul id="changes">
+                        <li id="titleChange">CHANGELOG</li>
+                        <li id="spaceTaker"></li>
+                        <li id="change1">Changed graphics to a lighter theme</li>
+                        <li id="change2">Fixed various bugs</li>
+                        <li id="change3">Finished basic game play</li>
+                    </ul>
+                </div>
+            <div id="start_screen_login">
+                <div id="title_container">
+                    <h1>Welcome!</h1>
+                </div>
+                <div id="play_container">
+                    <input id="name" value="Nickname">
+                    <button id="play">Join!</button>
+                </div>
+            </div>
+        </div>
+    </body>
+    
+            <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+            <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+            <script>
+            $("#death_screen_container").hide();
+            var nickName = "";
+                
+            $("#play").click(function() {
+                $("#start_screen_container").fadeTo(1000, 0.0, function() {
+                    
+                $("#start_screen_container").hide();
+                var socket = io();
+                nickName = $("#name").val();
+                var drawColor = "#1abc9c";
+                var canvas = document.createElement('canvas');
+                canvas.id     = "drawCanvas";
+                canvas.width  = window.innerWidth;
+                canvas.height = window.innerHeight;
+                document.body.appendChild(canvas);
+                document.getElementById("drawCanvas").style.background = 'white';
+                var mode = "";
+                var foodColorArray = [];
+                
+                var id = Math.floor((Math.random() * 1000000) + 1);
+                var isDead = false;
+                console.log("ID: " + id);
+                
+            function circle(x, y, size, color) {
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+                
+            function text(text, x, y, size) {
+                ctx.font = size;
+                ctx.fillStyle = "black";
+                console.log(text);
+                ctx.textAlign = "center";
+                ctx.fillText(text, x, y);
+            } 
+            function ball() {
+                this.x = 50;
+                this.y = 50;
+                this.size = 40;
+                this.targetX = 0;
+                this.targetY = 0;
+                
+                this.update = function() {
+                    var dx = this.targetX - window.innerWidth / 2;
+                    var dy = this.targetY - window.innerHeight / 2;
+                    
+                    var movex = dx * 0.007;
+                    var movey = dy * 0.007;
+                    this.x += movex;
+                    this.y += movey;
+                    
+                    if (this.x < -2500) {
+                        this.x = -2499;
+                    }
+                    if (this.x > 2500) {
+                        this.x = 2499;
+                    }
+                    if (this.y < -2500) {
+                        this.y = -2499;
+                    }
+                    if (this.y > 2500) {
+                        this.y = 2499;
+                    }
+                    
+                    var newMode = "";
+                    if(mode == "red") {
+                        newMode = "#B90000";
+                    }
+                    if(mode == "white") {
+                        newMode = "#e5e5e5";
+                    }
+                    if(mode == "green") {
+                        newMode = "#73B973";
+                    }
+                    
+                    circle(this.x, this.y, this.size + 5, newMode);
+                    circle(this.x, this.y, this.size, mode);
+                    var calc = (this.size / nickName.length)
+                    text(nickName, this.x, this.y, calc.toString() + "px Arial");
+                }
+            }
+                
+            var canvas = document.getElementById("drawCanvas");
+            var ctx = canvas.getContext("2d");    
+            var player = new ball();
+            window.setInterval(refresh, 20);
+                
+            function backgroundSquare() {
+                ctx.fillStyle = "black";
+                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
+            }
+            function clamp(value, min, max){
+                if(value < min) return min;
+                else if(value > max) return max;
+                return value;
+            }
+                
+            function refresh() {
+                ctx.setTransform(1,0,0,1,0,0);//reset the transform matrix as it is cumulative
+                ctx.clearRect(0, 0, canvas.width , canvas.height);//clear the viewport AFTER the matrix is reset
+
+                //Clamp the camera position to the world bounds while centering the camera around the player                                             
+                var camX = clamp(-player.x + canvas.width/2, -5000, 5000 - canvas.width);
+                var camY = clamp(-player.y + canvas.height/2, -5000, 5000 - canvas.height);
+
+                ctx.translate( camX, camY ); 
+                
+                
+                player.update();
+                socket.emit('coord', [player.x, player.y, player.size, id, mode, nickName]);
+                dispOther();
+                dispFood();
+            }
+                
+            function dispOther() {
+                for (var key in otherClients) {
+                        circle(otherClients[key][0], otherClients[key][1], otherClients[key][2], otherClients[key][3]);
+                        text(otherClients[key][4], otherClients[key][0], otherClients[key][1], "20px Ariel"); 
+                }
+            }
+                
+                function dispFood() {
+                    for (var i = 0; i < circleArrayX.length; i++) {
+                        circle(circleArrayX[i], circleArrayY[i], 5, foodColorArray[i]);
+                    }
+                }
+                
+                $(document).mousemove(function(event) {
+                    var X = 0;
+                    var Y = 0;
+                    X = event.pageX - $('#drawCanvas').offset().left;
+                    Y = event.pageY - $('#drawCanvas').offset().top;
+                    player.targetX = X;
+                    player.targetY = Y;
+                    
+                    
+                });
+                
+                var otherClients = {};
+                
+                
+                socket.on('coords', function(coord) {
+                        otherClients[coord[3].toString()] = [coord[0], coord[1], coord[2], coord[4], coord[5]];
+                    
+                });
+                socket.on('clear', function(lard) {
+                    otherClients = {};
+                });
+                
+                var circleArrayX = [];
+                 var circleArrayY = [];
+                
+                socket.on('food', function(coord) {
+                    circleArrayX = coord[0];
+                    circleArrayY = coord[1];
+                    foodColorArray = coord[2];
+                });
+                
+                socket.on('expand', function(amount) {
+                    player.size += amount;
+                });
+                
+                socket.on('death', function(who) {
+                    socket.disconnect()
+                    $("#death_screen_container").css("width", window.innerWidth.toString());
+                    $("#death_screen_container").css("height", window.innerHeight.toString());
+                    $("#death_screen_container").show();
+                    
+                });
+                    
+                function donate() {
+                    socket.emit("donate", 5);
+                }
+                    
+                $(document).keydown(function(e) {
+                    switch(e.which) {
+                            
+                        case 37: // left
+                        break;
+
+                        case 38: // up
+                            donate();
+                            console.log("DONATING");
+                        break;
+
+                        case 39: // right
+                        break;
+
+                        case 40: // down
+                            socket.emit('donate_stop', 0);
+                        break;
+
+                        default: return; // exit this handler for other keys
+                    }
+                    e.preventDefault(); // prevent the default action (scroll / move caret)
+                });
+                
+                socket.on('type', function(type) {
+                    if (type == "infected") {
+                        mode = "green";
+                    }
+                    if (type == "redCell") {
+                        mode = "red";
+                    }
+                    if (type == "whiteCell") {
+                        mode = "white";
+                    }
+                });
+            });
+                });
+            
+                
+                
+        </script>
+    
+</html>
