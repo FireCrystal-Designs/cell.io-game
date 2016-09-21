@@ -1,0 +1,26 @@
+{
+  "name": "cell.io-game",
+  "description": "a agar.io like game written in node.js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Peppermint-Designs/cell.io-game.git"
+  },
+  "author": "Erik King",
+  "dependencies": {
+    "express": "x.x.x",
+    "socket.io": "x.x.x"
+  },
+  "engines": {
+    "node": "4.4.7"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Peppermint-Designs/cell.io-game/issues"
+  },
+  "homepage": "https://github.com/Peppermint-Designs/cell.io-game#readme"
+}
