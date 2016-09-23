@@ -1,4 +1,6 @@
-var app = require('express')();
+
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var foodX = [];
@@ -13,6 +15,11 @@ var client_type = [];
 var donating = [];
 var clients = 0;
 var finished = false;
+
+
+app.set('port', (process.env.PORT || 5000));
+
+app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -89,13 +96,16 @@ function addFood() {
     var randomInt = getRandomInt(0, 2);
     var color = "";
     if (randomInt == 0) {
-        color = "green";
+        //Green
+        color = "#2ecc71";
     }
     if (randomInt == 1) {
-        color = "purple";
+        //Purple
+        color = "#9b59b6";
     }
     if (randomInt == 2) {
-        color = "blue";
+        //Blue
+        color = "#2980b9";
     }
     foodColor.push(color);
     io.emit('food', [foodX, foodY, foodColor]);
@@ -180,6 +190,6 @@ io.on('connection', function(socket){
     
 });
 
-http.listen(25565, function(){
-  console.log('listening on *:25565');
+http.listen(app.get('port'), function(){
+  console.log('Node app is running on port', app.get('port'));
 });
