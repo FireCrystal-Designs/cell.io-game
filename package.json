@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Peppermint-Designs/cell.io-game/issues"
   },
+  "scripts": {
+    "start": "node your-script.js"
+  },
   "homepage": "https://github.com/Peppermint-Designs/cell.io-game#readme"
 }
