@@ -91,24 +91,29 @@ function checkForPlayerCollision() {
 setInterval(addFood, 500) 
 
 function addFood() {
-    foodX.push(getRandomInt(-2500, 2500));
-    foodY.push(getRandomInt(-2500, 2500));
-    var randomInt = getRandomInt(0, 2);
-    var color = "";
-    if (randomInt == 0) {
-        //Green
-        color = "#2ecc71";
+    if (foodX.length > 1500) {
+        
     }
-    if (randomInt == 1) {
-        //Purple
-        color = "#9b59b6";
+    else {
+        foodX.push(getRandomInt(-2500, 2500));
+        foodY.push(getRandomInt(-2500, 2500));
+        var randomInt = getRandomInt(0, 2);
+        var color = "";
+        if (randomInt == 0) {
+            //Green
+            color = "#2ecc71";
+        }
+        if (randomInt == 1) {
+            //Purple
+            color = "#9b59b6";
+        }
+        if (randomInt == 2) {
+            //Blue
+            color = "#2980b9";
+        }
+        foodColor.push(color);
+        io.emit('food', [foodX, foodY, foodColor]);
     }
-    if (randomInt == 2) {
-        //Blue
-        color = "#2980b9";
-    }
-    foodColor.push(color);
-    io.emit('food', [foodX, foodY, foodColor]);
 }
 
 function checkFoodCollision(cord) {
