@@ -121,7 +121,7 @@
                 canvas.width  = window.innerWidth;
                 canvas.height = window.innerHeight;
                 document.body.appendChild(canvas);
-                document.getElementById("drawCanvas").style.background = 'white';
+                document.getElementById("drawCanvas").style.background = "#233140";
                 var mode = "";
                 var foodColorArray = [];
                 
@@ -143,6 +143,12 @@
                 ctx.textAlign = "center";
                 ctx.fillText(text, x, y);
             } 
+                    
+            function drawBackground() {
+                ctx.fillStyle = "#2c3e50";
+                ctx.fillRect(-2500, -2500, 5000, 5000);
+            }
+                    
             function ball() {
                 this.x = 50;
                 this.y = 50;
@@ -194,11 +200,7 @@
             var ctx = canvas.getContext("2d");    
             var player = new ball();
             window.setInterval(refresh, 20);
-                
-            function backgroundSquare() {
-                ctx.fillStyle = "black";
-                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
-            }
+
             function clamp(value, min, max){
                 if(value < min) return min;
                 else if(value > max) return max;
@@ -214,17 +216,32 @@
                 var camY = clamp(-player.y + canvas.height/2, -5000, 5000 - canvas.height);
 
                 ctx.translate( camX, camY ); 
-                
-                
+                drawBackground();
+                dispFood();
                 player.update();
                 socket.emit('coord', [player.x, player.y, player.size, id, mode, nickName]);
                 dispOther();
-                dispFood();
             }
                 
             function dispOther() {
                 for (var key in otherClients) {
+                        
+                        var dispOtherColor = "";
+                        var mode = otherClients[key][3];
+                        if(mode == "red") {
+                            dispOtherColor = "#B90000";
+                        }
+                        if(mode == "white") {
+                            dispOtherColor = "#e5e5e5";
+                        }
+                        if(mode == "green") {
+                            dispOtherColor = "#73B973";
+                        }
+                        
+                        circle(otherClients[key][0], otherClients[key][1], otherClients[key][2] + 5, dispOtherColor);
+                        
                         circle(otherClients[key][0], otherClients[key][1], otherClients[key][2], otherClients[key][3]);
+                    
                         text(otherClients[key][4], otherClients[key][0], otherClients[key][1], "20px Ariel"); 
                 }
             }
