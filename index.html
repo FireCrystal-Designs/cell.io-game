@@ -5,8 +5,11 @@
         <link rel="stylesheet" type="text/css"
           href="https://fonts.googleapis.com/css?family=Raleway">
         <style>
+            form {padding: 3px; position: fixed; bottom: 0; width: 100%; }
+            form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; border-radius: 7px; background-color: white; font-family: Raleway}
+            form button { width: 9%; background: #e74c3c; border: none; padding: 10px; border-radius: 7px; font-family: Raleway;}
             html, body {
-                background: black; 
+                background: #34495e; 
                 height: 100%;
                 margin: 0;
             }
@@ -23,56 +26,38 @@
                 color: white;
             }
             
-            #start_screen_container {
-                position: relative;
-                background: #34495e;
-                min-height: 100%;
-                height: 100%;
-                text-align: center;
-                vertical-align: middle;
-            }
-            
-            #start_screen_login {
-                position: absolute;
-                border-radius: 10px;
-                top: 50%; left: 50%;
-                transform: translate(-50%,-50%);
-                background: white;
-                width: 35%;
-                height: 500px;
-                margin: auto;
-            }
             #play_container {
                 padding-top: 50px;
             }
             
-            #changelog_container {
-                left:0;
-                top: 0;
-                text-align: left;
-                background-color: aliceblue;
-                border-radius: 5%;
-                width: 25%;
-            }
-            
-            #titleChange {
-                list-style-type: none;
-                font-family: Raleway;
-                font-size: 20px;
-            }
-            
-            #change1 {
-                font-family: Raleway;
-            }
-            #change2 {
-                font-family: Raleway;
-            }
-            #change3 {
-                font-family: Raleway;
-            }
             #spaceTaker {
                 list-style-type: none;
             }
+            #nickName {
+            z-index: 400;
+            vertical-align: middle;
+            width: 100%;
+            height: 0px;
+            text-align: center;
+            background-color: black;
+           
+            opacity: 0;
+        }
+             #Enter {
+            font-family: Raleway;
+            color: white;
+            font-size: 40px;
+            line-height: 600px;
+            }
+            #probe {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            vertical-align: middle;
+        }
+            input:focus {
+            outline:none;
+        }
             
         </style>
     </head>
@@ -81,25 +66,15 @@
         <div id="death_screen_container">
             <h1 id="dead">You died!</h1>
         </div>
-        <div id="start_screen_container">
-            <div id="changelog_container">
-                    <ul id="changes">
-                        <li id="titleChange">CHANGELOG</li>
-                        <li id="spaceTaker"></li>
-                        <li id="change1">Changed graphics to a lighter theme</li>
-                        <li id="change2">Fixed various bugs</li>
-                        <li id="change3">Finished basic game play</li>
-                    </ul>
-                </div>
-            <div id="start_screen_login">
-                <div id="title_container">
-                    <h1>Welcome!</h1>
-                </div>
-                <div id="play_container">
-                    <input id="name" value="Nickname">
-                    <button id="play">Join!</button>
-                </div>
-            </div>
+        <div id="beginScreen">
+        <div id="nickName">
+            <h1 id= "Enter">Whats your name?</h1>
+        </div>
+        <div id="probe">
+            <form>
+                <input id="m" />
+            </form>
+        </div>
         </div>
     </body>
     
@@ -108,13 +83,37 @@
             <script>
             $("#death_screen_container").hide();
             var nickName = "";
+            var $target = $('html,body'); 
+            $target.animate({scrollTop: $target.height()});
                 
-            $("#play").click(function() {
-                $("#start_screen_container").fadeTo(1000, 0.0, function() {
-                    
-                $("#start_screen_container").hide();
+            var tube = {height: window.innerHeight, opacity: 1};
+            $("#nickName").animate(tube, 0, function() {
+                var change = {height: window.innerHeight / 2};
+                $("form").animate(change, 700);
+                $("#m").focus();
+                $("#m").css("border-radius", "0px");
+                $("#m").css("background-color", "black");
+                $("#m").css("color", "white");
+                $("#m").css("height", "px");
+                $("#m").css("width", "65%");
+                $("form button").hide();
+                $("#m").css("font-size", "60px");
+                $("#m").css( "border-bottom", "4px solid white" );
+            });
+                
+            $('form').submit(function(){
+                runMain();
+                return false;
+            });
+                
+            function runMain() { 
+                $('#m').hide();
+                $("#beginScreen").animate({height:0}, 2000, function() {
+                $('#beginscreen').remove();
+                var $target = $('html,body'); 
+                $target.animate({scrollTop: $target.height()});
                 var socket = io();
-                nickName = $("#name").val();
+                nickName = $("#m").val();
                 var drawColor = "#1abc9c";
                 var canvas = document.createElement('canvas');
                 canvas.id     = "drawCanvas";
@@ -333,8 +332,8 @@
                         mode = "white";
                     }
                 });
-            });
-                });
+                    });
+            }
             
                 
                 
