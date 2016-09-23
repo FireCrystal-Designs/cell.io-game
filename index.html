@@ -58,11 +58,24 @@
             input:focus {
             outline:none;
         }
+        #version-CONTAINER {
+            text-align: center;
+            padding: none;
+        }
+            
+        #versionDisp {
+            font-size: 15px;
+            padding: none;
+            font-family: Raleway;
+        }
             
         </style>
     </head>
     
     <body>
+        <div id="version-CONTAINER">
+            <h1 id='versionDisp'>Cell-IO version 0.01</h1>
+        </div>
         <div id="death_screen_container">
             <h1 id="dead">You died!</h1>
         </div>
@@ -111,7 +124,7 @@
                 $("#beginScreen").animate({height:0}, 2000, function() {
                 $('#beginscreen').remove();
                 var $target = $('html,body'); 
-                $target.animate({scrollTop: $target.height()});
+                $target.animate({scrollTop: $target.height()}, 3000).delay(5000);
                 var socket = io();
                 nickName = $("#m").val();
                 var drawColor = "#1abc9c";
