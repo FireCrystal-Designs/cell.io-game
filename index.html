@@ -9,7 +9,7 @@
             form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; border-radius: 7px; background-color: white; font-family: Raleway}
             form button { width: 9%; background: #e74c3c; border: none; padding: 10px; border-radius: 7px; font-family: Raleway;}
             html, body {
-                background: #34495e; 
+                background: black; 
                 height: 100%;
                 margin: 0;
             }
@@ -40,8 +40,6 @@
             height: 0px;
             text-align: center;
             background-color: black;
-           
-            opacity: 0;
         }
              #Enter {
             font-family: Raleway;
@@ -69,12 +67,28 @@
             font-family: Raleway;
         }
             
+        #ruleContainer {
+            z-index: 3000;
+            padding: 10px;
+            border: 3px solid white;
+            background-color: black;
+            border-radius: 7px;
+            font-family: Raleway;  
+            color: white;
+        }
+            
         </style>
     </head>
     
     <body>
         <div id="version-CONTAINER">
             <h1 id='versionDisp'>Cell-IO version 0.01</h1>
+        </div>
+        <div id="ruleContainer">
+            <h1>How to play</h1>
+            <h4>If you are green then your job is to infect! Touch a red blood cell and watch it become infected. But watch out for white blood cells as they can eat you if they are as little as 20 mass bigger! </h4>
+            <h4>If you are a red blood cell your job is to support the white blood cells by giving mass to them! You do this by simply going underneath/ontop of them. </h4>
+            <h4>If you are a white blood cell your job is to eat the infected cells! You do this buy going ontop of them. You must be at least 20 mass bigger than the green cells to eat them.</h4>
         </div>
         <div id="death_screen_container">
             <h1 id="dead">You died!</h1>
@@ -94,12 +108,15 @@
             <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
             <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
             <script>
+            var running = false;
+            var welcomeFinish = false;
             $("#death_screen_container").hide();
             var nickName = "";
             var $target = $('html,body'); 
             $target.animate({scrollTop: $target.height()});
                 
             var tube = {height: window.innerHeight, opacity: 1};
+            $("#ruleContainer").hide();
             $("#nickName").animate(tube, 0, function() {
                 var change = {height: window.innerHeight / 2};
                 $("form").animate(change, 700);
@@ -114,17 +131,33 @@
                 $("#m").css( "border-bottom", "4px solid white" );
             });
                 
+            $( "html" ).keypress(function() {
+                if (running == false && welcomeFinish == true) {
+                    runMain();
+                }
+            });
+                
             $('form').submit(function(){
-                runMain();
+                runRules();
                 return false;
             });
                 
+            function runRules() {
+                $('html').fadeTo
+                $("html").fadeTo(1000, 0, function() {
+                    $("#ruleContainer").show();
+                    $("#beginScreen").hide();
+                    $("html").fadeTo(1000, 1);
+                });
+                welcomeFinish = true;
+            }
+                
             function runMain() { 
                 $('#m').hide();
-                $("#beginScreen").animate({height:0}, 2000, function() {
-                $('#beginscreen').remove();
+                $("#ruleContainer").animate({height:0}, 2000, function() {
+                $('#ruleContainer').remove();
                 var $target = $('html,body'); 
-                $target.animate({scrollTop: $target.height()}, 3000).delay(5000);
+                $target.animate({scrollTop: $target.height()}).delay(5000);
                 var socket = io();
                 nickName = $("#m").val();
                 var drawColor = "#1abc9c";
@@ -133,6 +166,8 @@
                 canvas.width  = window.innerWidth;
                 canvas.height = window.innerHeight;
                 document.body.appendChild(canvas);
+                $('#drawCanvas').hide();
+                $('#drawCanvas').fadeIn(1000);
                 document.getElementById("drawCanvas").style.background = "#233140";
                 var mode = "";
                 var foodColorArray = [];
