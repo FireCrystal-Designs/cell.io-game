@@ -155,7 +155,7 @@ io.on('connection', function(socket){
     
     socket.on('disconnect', function(){
         console.log('USER DIED/DISCONNECTED');
-        io.emit('leaderBoardUpdate', [clientName, size, client_type]);
+        io.emit('leaderBoardUpdate', [[], [], []]);
         clients -= 1;
         console.log("CLIENTS: " + clients);
         io.emit('clear', 0);
