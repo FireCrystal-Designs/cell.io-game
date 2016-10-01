@@ -11,8 +11,10 @@ var coordY = [];
 var clientID = [];
 var client_to_client_ID = [];
 var size = [];
+var clientName = [];
 var client_type = [];
 var donating = [];
+var clientType = [];
 var clients = 0;
 var finished = false;
 
@@ -180,14 +182,17 @@ io.on('connection', function(socket){
         size.push(coord[2]);
         clientID.push(socket.id);
         socket.broadcast.emit('coords', coord);
+        clientName.push(coord[5]);
         count++;
         if (count == clients) {
+            io.emit('leaderBoardUpdate', [clientName, size, client_type]);
             checkForPlayerCollision();
             count = 0;
             coordX = [];
             coordY = [];
             size = [];
             client_type = [];
+            clientName = [];
             clientID = [];
             client_to_client_ID = [];
         }

@@ -8,6 +8,7 @@
             form {padding: 3px; position: fixed; bottom: 0; width: 100%; }
             form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; border-radius: 7px; background-color: white; font-family: Raleway}
             form button { width: 9%; background: #e74c3c; border: none; padding: 10px; border-radius: 7px; font-family: Raleway;}
+            #messages { list-style-type: none; margin: 0; padding: 0; z-index: -100; color:  #ecf0f1; font-size: 30px;; font-family: Raleway}
             html, body {
                 background: black; 
                 height: 100%;
@@ -70,6 +71,8 @@
         #ruleContainer {
             z-index: 3000;
             padding: 10px;
+            padding-left: 6%;
+            padding-right: 6%;
             border: 3px solid white;
             background-color: black;
             border-radius: 7px;
@@ -77,6 +80,31 @@
             color: white;
             text-align: center;
         }
+            
+            #leaderBoardContainer {
+                position: absolute;
+                width: 100%;
+                height: 100%;  
+                z-index: 600;
+            }
+            #leaderBoard {
+                text-align: center;
+                top: 0;
+                right: 0;
+                position: absolute;
+                background-color: black;
+                opacity: 0.5;
+                width: 300px;
+                border: 3px solid white;
+                height: 400px;
+                border-radius: 5px;
+                z-index: 600;
+            }
+            #mainTextLeader {
+                color: white;
+                opacity: 1;
+                font-family: Raleway;
+            }
             
         </style>
     </head>
@@ -87,12 +115,22 @@
         </div>
         <div id="ruleContainer">
             <h1>How to play</h1>
-            <h4>If you are green then your job is to infect! Touch a red blood cell and watch it become infected. But watch out for white blood cells as they can eat you if they are as little as 20 mass bigger! </h4>
-            <h4>If you are a red blood cell your job is to support the white blood cells by giving mass to them! You do this by simply going underneath/ontop of them. </h4>
-            <h4>If you are a white blood cell your job is to eat the infected cells! You do this buy going ontop of them. You must be at least 20 mass bigger than the green cells to eat them.</h4>
+            <h4>If you are <font color="#2ecc71">green</font> then your job is to infect! Touch a red blood cell and watch it become infected. But watch out for white blood cells as they can eat you if they are as little as 20 mass bigger! </h4>
+            <h4>If you are a <font color="#B90000">red</font> blood cell your job is to support the white blood cells by giving mass to them! You do this by simply going underneath/ontop of them. </h4>
+            <h4>If you are a <font color="white">white</font> blood cell your job is to eat the infected cells! You do this buy going ontop of them. You must be at least 20 mass bigger than the green cells to eat them.</h4>
             <h4>    </h4>
-            <h4 id="centerTONE">(Press Any Key to Spawn!)</h4>
+ +           <h4 id="centerTONE">(Press Any Key to Spawn!)</h4>
         </div>
+        
+        <div id="leaderBoardContainer">
+            <div id="leaderBoard">
+                <h1 id="mainTextLeader">LeaderBoard</h1>
+                <hr color="white" width="100%" size="3" noshade>
+                <ul id="messages">
+                </ul>
+            </div>
+        </div>
+        
         <div id="death_screen_container">
             <h1 id="dead">You died!</h1>
         </div>
@@ -102,7 +140,7 @@
         </div>
         <div id="probe">
             <form>
-                <input id="m" maxlength="17"/>
+                <input id="m" />
             </form>
         </div>
         </div>
@@ -120,6 +158,7 @@
                 
             var tube = {height: window.innerHeight, opacity: 1};
             $("#ruleContainer").hide();
+            $("#leaderBoardContainer").hide();
             $("#nickName").animate(tube, 0, function() {
                 var change = {height: window.innerHeight / 2};
                 $("form").animate(change, 700);
@@ -169,8 +208,11 @@
                 canvas.width  = window.innerWidth;
                 canvas.height = window.innerHeight;
                 document.body.appendChild(canvas);
+                $('#drawCanvas').css('z-index', '1');
+                $("#drawCanvas").css('position', 'absolute');
                 $('#drawCanvas').hide();
                 $('#drawCanvas').fadeIn(1000);
+                $("#leaderBoardContainer").fadeIn(1500);
                 document.getElementById("drawCanvas").style.background = "#233140";
                 var mode = "";
                 var foodColorArray = [];
@@ -189,7 +231,6 @@
             function text(text, x, y, size) {
                 ctx.font = size;
                 ctx.fillStyle = "black";
-                console.log(text);
                 ctx.textAlign = "center";
                 ctx.fillText(text, x, y);
             } 
@@ -273,6 +314,9 @@
                 dispOther();
             }
                 
+                    
+            var onlineList = [];
+                    
             function dispOther() {
                 for (var key in otherClients) {
                         
@@ -293,6 +337,7 @@
                         circle(otherClients[key][0], otherClients[key][1], otherClients[key][2], otherClients[key][3]);
                     
                         text(otherClients[key][4], otherClients[key][0], otherClients[key][1], "20px Ariel"); 
+                    
                 }
             }
                 
@@ -348,6 +393,11 @@
                 function donate() {
                     socket.emit("donate", 5);
                 }
+                
+                //A function that pushes a value to the leaderboard
+                function leaderUpdate(name, size) {
+                    $('#messages').append($('<li> <font color=' + size + '>' + name + '</font>'));
+                }
                     
                 $(document).keydown(function(e) {
                     switch(e.which) {
@@ -383,8 +433,57 @@
                         mode = "white";
                     }
                 });
-                    });
-            }
+                
+                //Socket function that reseves leaderboard info
+                socket.on('leaderBoardUpdate', function(testArray) {
+                    var users = testArray[0];
+                    var sizes = testArray[1];
+                    var colorsss = testArray[2];
+                    $('#messages li').remove();
+                    var finalList = [];
+                    console.log(colorsss);
+                    
+                    for (var i = 0; i <= users.length; i++) {
+                        
+                        var largest= 0;
+
+                        for (l=0; l <= users.length; l++){
+                            if (sizes[l] > sizes[largest]) {
+                                largest = l;
+                            }
+                        }
+                        var dispOtherColors = "";
+                        var modes = colorsss[i];
+                        if(modes == "red") {
+                            dispOtherColors = "#B90000";
+                        }
+                        if(modes == "white") {
+                            dispOtherColors = "#e5e5e5";
+                        }
+                        if(modes == "green") {
+                            dispOtherColors = "#73B973";
+                        }
+                        
+                        finalList.push([users[largest], dispOtherColors]);
+                        console.log(users[largest]);
+                        sizes.splice(largest, 1);
+                        users.splice(largest, 1);
+                    }
+                    for (var k = 0; k <= finalList.length; k++) {
+                        try {
+                            leaderUpdate(finalList[k][0], finalList[k][1]);
+                        }
+                        catch(err) {
+                            
+                        }
+                    }
+                });
+                
+                    
+                    
+            });
+                
+    }
             
                 
                 
