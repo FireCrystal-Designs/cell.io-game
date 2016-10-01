@@ -439,6 +439,7 @@
                     var users = testArray[0];
                     var sizes = testArray[1];
                     var colorsss = testArray[2];
+                    console.log(colorsss);
                     $('#messages li').remove();
                     var finalList = [];
                     var originUserLength = users.length;
@@ -453,19 +454,8 @@
                             }
                         }
                         var dispOtherColorss = "";
-                        var modes = colorsss[largest];
-                        if(modes == "red") {
-                            dispOtherColorss = "#B90000";
-                        }
-                        if(modes == "white") {
-                            dispOtherColorss = "#e5e5e5";
-                        }
-                        if(modes == "green") {
-                            dispOtherColorss = "#73B973";
-                        }
                         
-                        finalList.push([users[largest], dispOtherColorss]);
-                        console.log(users[largest]);
+                        finalList.push([users[largest], colorsss[largest]]);
                         sizes.splice(largest, 1);
                         users.splice(largest, 1);
                     }
