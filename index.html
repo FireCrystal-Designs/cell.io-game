@@ -8,7 +8,7 @@
             form {padding: 3px; position: fixed; bottom: 0; width: 100%; }
             form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; border-radius: 7px; background-color: white; font-family: Raleway}
             form button { width: 9%; background: #e74c3c; border: none; padding: 10px; border-radius: 7px; font-family: Raleway;}
-            #messages { list-style-type: none; margin: 0; padding: 0; z-index: -100; color:  #ecf0f1; font-size: 30px;; font-family: Raleway}
+            #messages { list-style-type: none; margin: 0; padding: 0; z-index: -100; color:  #ecf0f1; font-size: 20px;; font-family: Raleway}
             html, body {
                 background: black; 
                 height: 100%;
@@ -140,7 +140,7 @@
         </div>
         <div id="probe">
             <form>
-                <input id="m" />
+                <input id="m" maxlength="17"/>
             </form>
         </div>
         </div>
@@ -454,7 +454,7 @@
                         }
                         var dispOtherColorss = "";
                         
-                        finalList.push(users[largest]);
+                        finalList.push([users[largest], sizes[largest]]);
                         sizes.splice(largest, 1);
                         users.splice(largest, 1);
                     }
@@ -466,7 +466,7 @@
                         }
                         else {
                         try {
-                            leaderUpdate(finalList[k]);
+                            leaderUpdate(finalList[k][0] + ' - ' + finalList[k][1]);
                         }
                         catch(err) {
                             
