@@ -434,13 +434,14 @@
                     }
                 });
                 
-                //Socket function that reseves leaderboard info
+                //Socket function that recieves leaderboard info
                 socket.on('leaderBoardUpdate', function(testArray) {
                     var users = testArray[0];
                     var sizes = testArray[1];
                     var colorsss = testArray[2];
                     $('#messages li').remove();
                     var finalList = [];
+                    var originUserLength = users.length;
                     console.log(colorsss);
                     
                     for (var i = 0; i <= users.length; i++) {
@@ -452,29 +453,34 @@
                                 largest = l;
                             }
                         }
-                        var dispOtherColors = "";
+                        var dispOtherColorss = "";
                         var modes = colorsss[i];
                         if(modes == "red") {
-                            dispOtherColors = "#B90000";
+                            dispOtherColorss = "#B90000";
                         }
                         if(modes == "white") {
-                            dispOtherColors = "#e5e5e5";
+                            dispOtherColorss = "#e5e5e5";
                         }
                         if(modes == "green") {
-                            dispOtherColors = "#73B973";
+                            dispOtherColorss = "#73B973";
                         }
                         
-                        finalList.push([users[largest], dispOtherColors]);
+                        finalList.push([users[largest], dispOtherColorss]);
                         console.log(users[largest]);
                         sizes.splice(largest, 1);
                         users.splice(largest, 1);
                     }
                     for (var k = 0; k <= finalList.length; k++) {
+                        if (finalList.length != originUserLength) {
+                            
+                        }
+                        else {
                         try {
                             leaderUpdate(finalList[k][0], finalList[k][1]);
                         }
                         catch(err) {
                             
+                        }
                         }
                     }
                 });

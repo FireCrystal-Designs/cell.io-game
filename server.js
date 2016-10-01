@@ -188,7 +188,7 @@ io.on('connection', function(socket){
         count++;
         if (count == clients) {
             emergencyCounterDelay++;
-            if (emergencyCounterDelay > 20) {
+            if (emergencyCounterDelay > 60) {
                 io.emit('leaderBoardUpdate', [clientName, size, client_type]);
                 emergencyCounterDelay = 0;
             }
