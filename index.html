@@ -458,13 +458,15 @@
                         sizes.splice(largest, 1);
                         users.splice(largest, 1);
                     }
+                    
+                    console.log(finalList);
                     for (var k = 0; k <= finalList.length; k++) {
                         if (finalList.length != originUserLength) {
                             
                         }
                         else {
                         try {
-                            console.log('user: ' + finalList[k][0] + " is color: " + finalList[k][1]);
+                            console.log('displaying: ' + 'user: ' + finalList[k][0] + " is color: " + finalList[k][1]);
                             leaderUpdate(finalList[k][0], finalList[k][1]);
                         }
                         catch(err) {
