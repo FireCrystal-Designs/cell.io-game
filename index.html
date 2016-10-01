@@ -442,7 +442,6 @@
                     $('#messages li').remove();
                     var finalList = [];
                     var originUserLength = users.length;
-                    console.log(colorsss);
                     
                     for (var i = 0; i <= users.length; i++) {
                         
@@ -454,7 +453,7 @@
                             }
                         }
                         var dispOtherColorss = "";
-                        var modes = colorsss[i];
+                        var modes = colorsss[largest];
                         if(modes == "red") {
                             dispOtherColorss = "#B90000";
                         }
