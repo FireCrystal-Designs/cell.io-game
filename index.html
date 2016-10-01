@@ -439,7 +439,6 @@
                     var users = testArray[0];
                     var sizes = testArray[1];
                     var colorsss = testArray[2];
-                    console.log(colorsss);
                     $('#messages li').remove();
                     var finalList = [];
                     var originUserLength = users.length;
@@ -465,6 +464,7 @@
                         }
                         else {
                         try {
+                            console.log('user: ' + finalList[k][0] + " is color: " + finalList[k][1]);
                             leaderUpdate(finalList[k][0], finalList[k][1]);
                         }
                         catch(err) {
