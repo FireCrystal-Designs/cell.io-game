@@ -396,7 +396,7 @@
                 
                 //A function that pushes a value to the leaderboard
                 function leaderUpdate(name, size) {
-                    $('#messages').append($('<li> <font color=' + size + '>' + name + '</font>'));
+                    $('#messages').append($('<li>' + name + '</li>'));
                 }
                     
                 $(document).keydown(function(e) {
@@ -454,7 +454,7 @@
                         }
                         var dispOtherColorss = "";
                         
-                        finalList.push([users[largest], colorsss[largest]]);
+                        finalList.push([users[largest]);
                         sizes.splice(largest, 1);
                         users.splice(largest, 1);
                     }
@@ -466,8 +466,7 @@
                         }
                         else {
                         try {
-                            console.log('displaying: ' + 'user: ' + finalList[k][0] + " is color: " + finalList[k][1]);
-                            leaderUpdate(finalList[k][0], finalList[k][1]);
+                            leaderUpdate(finalList[k]);
                         }
                         catch(err) {
                             
