@@ -74,13 +74,13 @@ function checkForPlayerCollision() {
                     if (client_type[i] == "white" && client_type[j] == "green") {
                         if (size[i] > size[j] + 10) {
                             io.to(clientID[j]).emit('death', client_to_client_ID[j]);
-                            io.to(clientID[i]).emit('expand', -20);
+                            io.to(clientID[i]).emit('expand', -10);
                         }
                     }
                     if (client_type[i] == "green" && client_type[j] == "white") {
                         if (size[j] > size[i] + 10) {
                             io.to(clientID[i]).emit('death', client_to_client_ID[i]);
-                            io.to(clientID[j]).emit('expand', -20);
+                            io.to(clientID[j]).emit('expand', -10);
                         }
                     }
                 }
