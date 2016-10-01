@@ -134,6 +134,7 @@ function checkFoodCollision(cord) {
     return collision; 
 }
 var count = 0;
+var emergencyCounterDelay = 0;
 
 io.on('connection', function(socket){
     io.emit('food', [foodX, foodY, foodColor]);
@@ -186,7 +187,11 @@ io.on('connection', function(socket){
         clientName.push(coord[5]);
         count++;
         if (count == clients) {
-            io.emit('leaderBoardUpdate', [clientName, size, client_type]);
+            emergencyCounterDelay++;
+            if (emergencyCounterDelay > 20) {
+                io.emit('leaderBoardUpdate', [clientName, size, client_type]);
+                emergencyCounterDelay = 0;
+            }
             checkForPlayerCollision();
             count = 0;
             coordX = [];
